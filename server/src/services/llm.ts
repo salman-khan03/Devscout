@@ -85,7 +85,7 @@ export async function summarize(user: GithubUser, analysis: Analysis): Promise<R
     };
     const res = await fetch(endpoint, {
       method: 'POST', headers, body: JSON.stringify(payload),
-      signal: AbortSignal.timeout(25_000),
+      signal: AbortSignal.timeout(gemini ? 60_000 : 25_000),
     });
 
     if (!res.ok) {
