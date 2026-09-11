@@ -1,0 +1,126 @@
+{
+  "$comment": [
+    "Relevance judgements for the retrieval evaluation.",
+    "",
+    "Each query names the archetypes whose members count as relevant. On the",
+    "synthetic corpus that mapping is ground truth: the generator built each",
+    "developer from exactly one archetype, so 'who should this query return' is",
+    "known rather than guessed. Run against a real GitHub corpus instead and",
+    "these labels no longer apply - see README for how to supply your own.",
+    "",
+    "Queries are written the way a recruiter actually types them: some name a",
+    "technology directly (lexical should win), some describe the work without",
+    "naming the stack (vector should win). A benchmark made only of the first",
+    "kind would flatter lexical search and prove nothing about the hybrid."
+  ],
+  "queries": [
+    {
+      "id": "q1",
+      "query": "rust systems programming async runtimes",
+      "relevantArchetypes": ["rust-systems"],
+      "kind": "explicit"
+    },
+    {
+      "id": "q2",
+      "query": "memory safety zero allocation low level performance",
+      "relevantArchetypes": ["rust-systems"],
+      "kind": "descriptive"
+    },
+    {
+      "id": "q3",
+      "query": "pytorch transformers deep learning",
+      "relevantArchetypes": ["ml-python"],
+      "kind": "explicit"
+    },
+    {
+      "id": "q4",
+      "query": "someone who evaluates retrieval quality and ranking models",
+      "relevantArchetypes": ["ml-python"],
+      "kind": "descriptive"
+    },
+    {
+      "id": "q5",
+      "query": "react typescript design systems accessibility",
+      "relevantArchetypes": ["frontend-react"],
+      "kind": "explicit"
+    },
+    {
+      "id": "q6",
+      "query": "building interfaces that stay fast with keyboard navigation",
+      "relevantArchetypes": ["frontend-react"],
+      "kind": "descriptive"
+    },
+    {
+      "id": "q7",
+      "query": "go kubernetes grpc distributed systems",
+      "relevantArchetypes": ["go-infra"],
+      "kind": "explicit"
+    },
+    {
+      "id": "q8",
+      "query": "consensus replication and reliability in backend services",
+      "relevantArchetypes": ["go-infra"],
+      "kind": "descriptive"
+    },
+    {
+      "id": "q9",
+      "query": "terraform aws infrastructure as code sre",
+      "relevantArchetypes": ["devops-cloud"],
+      "kind": "explicit"
+    },
+    {
+      "id": "q10",
+      "query": "incident response automation and cloud cost control",
+      "relevantArchetypes": ["devops-cloud"],
+      "kind": "descriptive"
+    },
+    {
+      "id": "q11",
+      "query": "swift ios swiftui mobile",
+      "relevantArchetypes": ["mobile"],
+      "kind": "explicit"
+    },
+    {
+      "id": "q12",
+      "query": "offline first apps with sync and battery efficiency",
+      "relevantArchetypes": ["mobile"],
+      "kind": "descriptive"
+    },
+    {
+      "id": "q13",
+      "query": "kafka spark airflow data pipelines",
+      "relevantArchetypes": ["data-eng"],
+      "kind": "explicit"
+    },
+    {
+      "id": "q14",
+      "query": "making the warehouse trustworthy with lineage and quality checks",
+      "relevantArchetypes": ["data-eng"],
+      "kind": "descriptive"
+    },
+    {
+      "id": "q15",
+      "query": "security fuzzing static analysis appsec",
+      "relevantArchetypes": ["security"],
+      "kind": "explicit"
+    },
+    {
+      "id": "q16",
+      "query": "supply chain integrity and reviewing parsers for vulnerabilities",
+      "relevantArchetypes": ["security"],
+      "kind": "descriptive"
+    },
+    {
+      "id": "q17",
+      "query": "backend infrastructure engineer comfortable with systems work",
+      "relevantArchetypes": ["go-infra", "rust-systems"],
+      "kind": "descriptive"
+    },
+    {
+      "id": "q18",
+      "query": "python engineer for data and machine learning work",
+      "relevantArchetypes": ["ml-python", "data-eng"],
+      "kind": "descriptive"
+    }
+  ]
+}

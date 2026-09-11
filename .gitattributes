@@ -1,0 +1,2 @@
+# Preserve migration bytes: checksums are stored in Postgres.
+*.sql -text

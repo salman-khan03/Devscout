@@ -1,0 +1,38 @@
+{
+  "name": "devscout",
+  "version": "2.0.0",
+  "private": true,
+  "description": "DevScout - Developer Talent Intelligence. Multi-tenant SaaS for sourcing engineers from GitHub with hybrid (vector + lexical + signal) ranking and evidence-backed explanations.",
+  "license": "MIT",
+  "workspaces": ["server", "web"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "dev": "concurrently -n api,web,worker -c cyan,magenta,yellow \"npm:dev:api\" \"npm:dev:web\" \"npm:dev:worker\"",
+    "dev:api": "npm --workspace server run dev",
+    "dev:web": "npm --workspace web run dev",
+    "dev:worker": "npm --workspace server run worker:dev",
+    "build": "npm --workspace server run build && npm --workspace web run build",
+    "vercel-build": "npm --workspace web run build",
+    "start": "npm --workspace server run start",
+    "worker": "npm --workspace server run worker",
+    "migrate": "npm --workspace server run migrate",
+    "seed": "npm --workspace server run seed",
+    "eval": "npm --workspace server run eval",
+    "test": "npm --workspace server run test",
+    "typecheck": "npm --workspace server run typecheck && npm --workspace web run typecheck",
+    "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md,css}\"",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "setup": "npm install && docker compose up -d && npm run migrate && npm run seed"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
+    "concurrently": "^9.1.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2"
+  }
+}

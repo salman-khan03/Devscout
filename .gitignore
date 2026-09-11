@@ -1,0 +1,17 @@
+node_modules/
+dist/
+build/
+.vercel/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+coverage/
+.turbo/
+legacy/
+server/.eval-cache/
+
+.neon
+.neon/
+*.tsbuildinfo

@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=https://render.com/schema/render.yaml.json
+services:
+  - type: web
+    name: devscout-api
+    runtime: node
+    plan: 0.5c-512mb
+    region: ohio
+    buildCommand: npm ci --include=dev && npm run build --workspace server
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CRON_SECRET
+        generateValue: true
+      - key: WEB_ORIGIN
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+      - key: EMBEDDING_PROVIDER
+        value: local
+      - key: DEMO_MODE
+        value: "true"
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: devscout-cache
+          property: connectionString
+  - type: worker
+    name: devscout-worker
+    runtime: node
+    plan: 0.5c-512mb
+    region: ohio
+    buildCommand: npm ci --include=dev && npm run build --workspace server
+    startCommand: npm run worker
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22
+      - key: DATABASE_URL
+        fromService: {type: web, name: devscout-api, envVarKey: DATABASE_URL}
+      - key: DIRECT_DATABASE_URL
+        fromService: {type: web, name: devscout-api, envVarKey: DIRECT_DATABASE_URL}
+      - key: JWT_SECRET
+        fromService: {type: web, name: devscout-api, envVarKey: JWT_SECRET}
+      - key: GEMINI_API_KEY
+        fromService: {type: web, name: devscout-api, envVarKey: GEMINI_API_KEY}
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+      - key: WEB_ORIGIN
+        fromService: {type: web, name: devscout-api, envVarKey: WEB_ORIGIN}
+      - key: EMBEDDING_PROVIDER
+        value: local
+      - key: WORKER_CONCURRENCY
+        value: 4
+      - key: REDIS_URL
+        fromService: {type: keyvalue, name: devscout-cache, property: connectionString}
+  - type: web
+    name: devscout-web
+    runtime: static
+    buildCommand: npm ci --include=dev && npm run build --workspace web
+    staticPublishPath: web/dist
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: VITE_API_ORIGIN
+        sync: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+  - type: keyvalue
+    name: devscout-cache
+    plan: 256mb
+    region: ohio
+    maxmemoryPolicy: noeviction
+    ipAllowList: []

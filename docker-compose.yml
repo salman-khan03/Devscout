@@ -1,0 +1,34 @@
+# Local dependencies for DevScout. `docker compose up -d` is the only setup step
+# that touches your machine - everything else runs from npm.
+services:
+  postgres:
+    # pgvector ships the ANN index types the hybrid ranker needs.
+    image: pgvector/pgvector:pg16
+    container_name: devscout-postgres
+    environment:
+      POSTGRES_USER: devscout
+      POSTGRES_PASSWORD: devscout
+      POSTGRES_DB: devscout
+    ports: ['5432:5432']
+    volumes: ['devscout-pgdata:/var/lib/postgresql/data']
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U devscout -d devscout']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: devscout-redis
+    command: ['redis-server', '--appendonly', 'yes']
+    ports: ['6379:6379']
+    volumes: ['devscout-redisdata:/data']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  devscout-pgdata:
+  devscout-redisdata:

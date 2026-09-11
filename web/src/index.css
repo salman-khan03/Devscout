@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Theme tokens.
+ *
+ * Every colour is defined once per mode as an "R G B" triple so Tailwind's
+ * `<alpha-value>` syntax works (bg-surface/60). Components reference roles -
+ * surface, ink, line - and never a raw colour, which is what makes dark mode a
+ * change to this file alone rather than a `dark:` variant on every element.
+ *
+ * Dark is defined twice on purpose: once under the OS preference, and once
+ * under an explicit .dark class so a viewer's toggle wins in both directions.
+ */
+@layer base {
+  :root {
+    color-scheme: light;
+
+    --canvas: 246 247 250;
+    --surface: 255 255 255;
+    --raised: 250 250 253;
+    --ink: 17 18 24;
+    --muted: 90 95 110;
+    --subtle: 134 139 154;
+    --line: 226 228 236;
+    --shadow: 17 18 24;
+
+    --brand: 74 55 224;
+    --brand-soft: 238 235 252;
+    --brand-ink: 255 255 255;
+
+    --positive: 0 131 0;
+    --warning: 237 161 0;
+    --danger: 200 42 58;
+
+    /* Data-viz slots, light mode. Validated for colour-vision separation and
+     * lightness band against a light surface - see docs/DESIGN.md. */
+    --series-1: 42 120 214;
+    --series-2: 235 104 52;
+    --series-3: 27 175 122;
+  }
+
+  .dark {
+    color-scheme: dark;
+
+    --canvas: 11 11 16;
+    --surface: 22 23 30;
+    --raised: 30 31 40;
+    --ink: 241 242 246;
+    --muted: 158 163 178;
+    --subtle: 118 124 140;
+    --line: 44 46 58;
+    --shadow: 0 0 0;
+
+    --brand: 139 124 255;
+    --brand-soft: 38 33 74;
+    --brand-ink: 12 10 28;
+
+    --positive: 52 190 118;
+    --warning: 232 173 45;
+    --danger: 240 116 128;
+
+    /* Re-stepped for the dark surface, not an automatic flip of the above. */
+    --series-1: 57 135 229;
+    --series-2: 217 89 38;
+    --series-3: 25 158 112;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /*
+   * A visible focus ring on everything reachable by keyboard. :focus-visible
+   * rather than :focus so it appears for keyboard users without drawing a ring
+   * around every mouse click.
+   */
+  :focus-visible {
+    outline: 2px solid rgb(var(--brand));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Respect the OS setting. Motion is decoration here; nothing depends on it. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  ::selection {
+    background: rgb(var(--brand) / 0.22);
+  }
+
+  /* A scrollbar that does not fight the dark theme. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--line)) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: rgb(var(--line));
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+}
+
+@layer components {
+  /*
+   * Skip link: the first thing in the tab order, hidden until focused. Without
+   * it a keyboard user has to tab through the entire navigation on every page
+   * to reach the results.
+   */
+  .skip-link {
+    @apply absolute left-4 top-4 z-[100] -translate-y-20 rounded-lg bg-brand px-4 py-2
+           text-sm font-medium text-brand-ink transition-transform focus:translate-y-0;
+  }
+
+  .card {
+    @apply rounded-xl border border-line bg-surface shadow-card;
+  }
+
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-lg px-3.5 py-2
+           text-sm font-medium transition disabled:pointer-events-none disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-brand text-brand-ink hover:opacity-90 active:opacity-80;
+  }
+  .btn-secondary {
+    @apply btn border border-line bg-surface text-ink hover:border-brand hover:text-brand;
+  }
+  .btn-ghost {
+    @apply btn text-muted hover:bg-raised hover:text-ink;
+  }
+  .btn-danger {
+    @apply btn border border-danger/30 bg-danger/5 text-danger hover:bg-danger/10;
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-ink
+           placeholder:text-subtle focus:border-brand focus:outline-none
+           focus:ring-2 focus:ring-brand/20;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-line bg-raised
+           px-2.5 py-0.5 text-xs font-medium text-muted;
+  }
+  .chip-active {
+    @apply border-brand/40 bg-brand-soft text-brand;
+  }
+
+  .label {
+    @apply text-2xs font-semibold uppercase tracking-wider text-subtle;
+  }
+
+  /* Loading placeholder that conveys shape rather than spinning. */
+  .skeleton {
+    @apply relative overflow-hidden rounded bg-line/60;
+  }
+  .skeleton::after {
+    @apply absolute inset-0 animate-shimmer;
+    content: '';
+    background: linear-gradient(90deg, transparent, rgb(var(--surface) / 0.6), transparent);
+  }
+}
+
+@layer utilities {
+  /* Visible only to screen readers - used for live-region announcements. */
+  .sr-only-live {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
